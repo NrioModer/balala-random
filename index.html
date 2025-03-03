@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Случайное число</title>
+    <title>Случайный пароль</title>
 </head>
 <body>
-    <h1 id="randomNumber"></h1>
+    <h1 id="password"></h1>
 
     <script>
         function simpleHash(str) {
@@ -18,26 +18,34 @@
             return hash;
         }
 
-        function generateRandomNumber(date) {
+        function generateRandomPassword(date) {
             const dateStr = date.toISOString();
             const hash = simpleHash(dateStr);
-            const randomNumber = Math.abs(hash % 100) + 1; // Масштабируем число от 1 до 100
-            return randomNumber;
+            const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const digits = '0123456789';
+            const allCharacters = uppercaseLetters + digits;
+
+            let password = '';
+            for (let i = 0; i < 8; i++) {
+                const index = Math.abs((hash + i) % allCharacters.length);
+                password += allCharacters[index];
+            }
+            return password;
         }
 
-        function updateRandomNumber() {
-            const randomNumberElement = document.getElementById('randomNumber');
+        function updatePassword() {
+            const passwordElement = document.getElementById('password');
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Устанавливаем время на начало дня
-            const randomNumber = generateRandomNumber(today);
-            randomNumberElement.textContent = `Случайное число: ${randomNumber}`;
+            const password = generateRandomPassword(today);
+            passwordElement.textContent = `Случайный пароль: ${password}`;
         }
 
-        updateRandomNumber();
+        updatePassword();
 
         // Обновляем при загрузке страницы
         window.addEventListener('load', function() {
-            updateRandomNumber();
+            updatePassword();
         });
     </script>
 </body>
