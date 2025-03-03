@@ -1,20 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8">
-    <title>Вывод числа</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Случайное число</title>
 </head>
 <body>
-    <p>Текущее число: <span id="currentNumber">1</span></p>
+    <h1 id="randomNumber"></h1>
 
     <script>
-        // Обновление числа через JavaScript
-        function updateNumber() {
-            document.getElementById("currentNumber").innerText = "1";
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-        
-        // Вызов функции для обновления числа
-        updateNumber();
+
+        function updateRandomNumber() {
+            const randomNumberElement = document.getElementById('randomNumber');
+            const randomNumber = getRandomNumber(1, 100); // Генерируем случайное число от 1 до 100
+            randomNumberElement.textContent = `Случайное число: ${randomNumber}`;
+        }
+
+        function checkAndUpdate() {
+            const today = new Date().toLocaleDateString();
+            const storedDate = localStorage.getItem('lastUpdateDate');
+            if (storedDate !== today) {
+                localStorage.setItem('lastUpdateDate', today);
+                updateRandomNumber();
+            } else {
+                // Если дата не изменилась, просто показываем последнее сгенерированное число
+                const storedNumber = localStorage.getItem('randomNumber');
+                if (storedNumber) {
+                    document.getElementById('randomNumber').textContent = `Случайное число: ${storedNumber}`;
+                } else {
+                    updateRandomNumber();
+                }
+            }
+        }
+
+        checkAndUpdate();
+
+        // Для тестирования можно обновлять каждую секунду
+        // setInterval(checkAndUpdate, 1000); // Обновлять каждую секунду для теста
+
+        // Для реального использования можно обновлять при загрузке страницы
+        window.addEventListener('load', function() {
+            checkAndUpdate();
+        });
     </script>
 </body>
 </html>
