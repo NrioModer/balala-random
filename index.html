@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Случайное число</title>
+    <title></title>
 </head>
 <body>
-    <h1 id="randomNumber"></h1>
+    <h1 id="password"></h1>
 
     <script>
-        function getRandomNumber(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+        function generateRandomPassword(length) {
+            const uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const digits = '0123456789';
+            const allCharacters = uppercaseLetters + digits;
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += allCharacters.charAt(Math.floor(Math.random() * allCharacters.length));
+            }
+            return password;
         }
 
-        function updateRandomNumber() {
-            const randomNumberElement = document.getElementById('randomNumber');
-            const randomNumber = getRandomNumber(1, 100); // Генерируем случайное число от 1 до 100
-            randomNumberElement.textContent = `Случайное число: ${randomNumber}`;
+        function updatePassword() {
+            const passwordElement = document.getElementById('password');
+            const password = generateRandomPassword(8); 
+            passwordElement.textContent = `${password}`;
+            localStorage.setItem('password', password); 
         }
 
         function checkAndUpdate() {
@@ -24,24 +33,19 @@
             const storedDate = localStorage.getItem('lastUpdateDate');
             if (storedDate !== today) {
                 localStorage.setItem('lastUpdateDate', today);
-                updateRandomNumber();
+                updatePassword();
             } else {
-                // Если дата не изменилась, просто показываем последнее сгенерированное число
-                const storedNumber = localStorage.getItem('randomNumber');
-                if (storedNumber) {
-                    document.getElementById('randomNumber').textContent = `Случайное число: ${storedNumber}`;
+                const storedPassword = localStorage.getItem('password');
+                if (storedPassword) {
+                    document.getElementById('password').textContent = `${storedPassword}`;
                 } else {
-                    updateRandomNumber();
+                    updatePassword();
                 }
             }
         }
 
         checkAndUpdate();
 
-        // Для тестирования можно обновлять каждую секунду
-        // setInterval(checkAndUpdate, 1000); // Обновлять каждую секунду для теста
-
-        // Для реального использования можно обновлять при загрузке страницы
         window.addEventListener('load', function() {
             checkAndUpdate();
         });
